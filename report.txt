@@ -1,0 +1,44 @@
+Bundled sounds: 21
+PASS  all bundled sounds shown as buttons  — 21/21 in expected order
+PASS  default layout has 3 columns  — first row: 3 buttons
+PASS  all 21 buttons fit on one screen  — last button ends at y=2106/2400
+PASS  play 'Bič (whiplash)'  — MediaPlayer reached state 'started'
+PASS  play 'Airhorn'  — MediaPlayer reached state 'started'
+PASS  play 'Vine boom'  — MediaPlayer reached state 'started'
+PASS  play 'Bruh'  — MediaPlayer reached state 'started'
+PASS  play 'Ba-dum-tss'  — MediaPlayer reached state 'started'
+PASS  play 'Sad trombone'  — MediaPlayer reached state 'started'
+PASS  play 'Bow chicka wow wow'  — MediaPlayer reached state 'started'
+PASS  play 'Sexy saxofon'  — MediaPlayer reached state 'started'
+PASS  play 'Dun dun dunnn'  — MediaPlayer reached state 'started'
+PASS  play 'Cvrčci (trapné ticho)'  — MediaPlayer reached state 'started'
+PASS  play 'Bonk'  — MediaPlayer reached state 'started'
+PASS  play 'Prd'  — MediaPlayer reached state 'started'
+PASS  play 'Boing'  — MediaPlayer reached state 'started'
+PASS  play 'Wow'  — MediaPlayer reached state 'started'
+PASS  play 'Správně'  — MediaPlayer reached state 'started'
+PASS  play 'Špatně'  — MediaPlayer reached state 'started'
+PASS  play 'Tadá'  — MediaPlayer reached state 'started'
+PASS  play 'Potlesk'  — MediaPlayer reached state 'started'
+PASS  play 'Smích publika'  — MediaPlayer reached state 'started'
+PASS  play 'Ka-ching'  — MediaPlayer reached state 'started'
+PASS  play 'Vířivé bubny'  — MediaPlayer reached state 'started'
+PASS  new sound stops the previous one (overlap off)  — states: ['started']
+PASS  second tap on a playing button stops it  — states: []
+PASS  settings screen opens
+PASS  rename shows in settings
+settings rows before drag: ['Prejmenovany bic', 'Airhorn', 'Vine boom', 'Bruh', 'Ba-dum-tss']
+PASS  drag & drop reorders the list  — before ['Prejmenovany bic', 'Airhorn', 'Vine boom'] after ['Airhorn', 'Vine boom', 'Prejmenovany bic']
+PASS  hidden row shows 'Zobrazit' toggle
+PASS  hide button available
+PASS  renamed title shown on board
+PASS  hidden sound not on board
+PASS  board follows the new order  — first four: ['Airhorn', 'Vine boom', 'Prejmenovany bic', 'Ba-dum-tss']
+PASS  order/rename/hide survive restart
+PASS  reset restores default order  — got ['Prejmenovany bic', 'Airhorn', 'Vine boom', 'Ba-dum-tss', 'Sad trombone']
+PASS  4-column layout  — first row: 4
+PASS  sound shared from another app is added
+PASS  imported sound plays  — states: ['started']
+PASS  no crashes in logcat
+
+40/40 checks passed
