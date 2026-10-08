@@ -18,7 +18,11 @@ Play Protect může upozornit na neznámého vývojáře – zvol „Přesto nai
 ## Zvuky
 
 - **Zabalené v aplikaci:** MP3 soubory ve složce [`sounds/`](sounds/). Název tlačítka je
-  název souboru (podtržítka → mezery). Po přidání souborů se automaticky sestaví nové APK.
+  název souboru (podtržítka → mezery, číselný prefix `01_` jen určuje pořadí).
+  Po přidání souborů se automaticky sestaví nové APK.
+- Aktuálně je tam 21 ukázkových zvuků (bič, airhorn, vine boom, ba-dum-tss, sad trombone,
+  porno-jazz „bow chicka wow wow“, saxofon…). Jsou vlastní, vygenerované skriptem
+  [`tools/generate_demo_sounds.py`](tools/generate_demo_sounds.py).
 - **Přidané v telefonu:** Nastavení → *Přidat zvuky z telefonu*, nebo v jiné aplikaci
   (WhatsApp, Soubory…) *Sdílet → Soundboard*.
 
@@ -30,6 +34,13 @@ Play Protect může upozornit na neznámého vývojáře – zvol „Přesto nai
 - skrytí zvuků z aplikace / smazání přidaných zvuků,
 - počet tlačítek vedle sebe (2 / 3 / 4, výchozí 3),
 - přehrávání přes sebe (výchozí vypnuto – nový zvuk zastaví předchozí).
+
+## Testy
+
+Každý push spustí na GitHub Actions emulátor (Pixel 6, Android 14), nainstaluje release APK
+a skriptem [`scripts/e2e.py`](scripts/e2e.py) proklikne všechna tlačítka (ověří, že se každý
+zvuk opravdu přehraje), otestuje nastavení a uloží screenshoty jako artefakt `e2e-results`.
+Release se publikuje jen když testy projdou.
 
 ## Technické
 

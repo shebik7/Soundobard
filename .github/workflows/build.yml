@@ -31,13 +31,57 @@ jobs:
           name: Soundboard-apk
           path: Soundboard.apk
 
-      # Builds from the default branch are published as a GitHub release so the
-      # APK can be downloaded straight from the phone's browser.
-      - name: Publish release
-        if: github.ref_name == github.event.repository.default_branch
-        uses: softprops/action-gh-release@v2
+  # Installs the release APK on a Pixel-sized emulator, taps every sound and checks
+  # that it really plays, exercises the settings and saves screenshots.
+  e2e:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: Soundboard-apk
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run end-to-end test on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -no-boot-anim -camera-back none
+          script: python3 scripts/e2e.py Soundboard.apk e2e-results
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-results
+          path: e2e-results
+
+  # Builds from the default branch that pass the test are published as a GitHub
+  # release so the APK can be downloaded straight from the phone's browser.
+  release:
+    needs: e2e
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Soundboard-apk
+
+      - uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: Soundboard ${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
           files: Soundboard.apk
           make_latest: true

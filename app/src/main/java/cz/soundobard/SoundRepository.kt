@@ -144,8 +144,12 @@ class SoundRepository(private val context: Context) {
     companion object {
         val AUDIO_EXTENSIONS = setOf("mp3", "ogg", "wav", "m4a", "aac", "flac")
 
+        /** Optional ordering prefix such as `01_` or `7 - ` that is not shown on the button. */
+        private val ORDER_PREFIX = Regex("^\\d{1,3}\\s*[_.\\- ]\\s*")
+
         fun titleFromFileName(name: String): String =
             name.substringBeforeLast('.')
+                .replace(ORDER_PREFIX, "")
                 .replace('_', ' ')
                 .trim()
                 .ifEmpty { name }
