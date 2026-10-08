@@ -5,9 +5,11 @@ name: Fetch sound candidates
 # into sounds/.
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - tools/fetch_sound_candidates.py
+    inputs:
+      only:
+        description: Comma-separated categories to fetch (empty = all)
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -20,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download candidates
-        run: python3 tools/fetch_sound_candidates.py candidates 3 2>&1 | tee candidates-log.txt
+        run: python3 tools/fetch_sound_candidates.py candidates 3 "${{ inputs.only }}" 2>&1 | tee candidates-log.txt
 
       - name: Publish to sound-candidates branch
         env:

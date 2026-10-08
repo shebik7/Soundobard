@@ -6,7 +6,7 @@ CC-BY), most downloaded first, and saves the MP3 previews of the top hits plus
 a manifest with title, author, license and URL. Runs on GitHub Actions
 (.github/workflows/fetch-sounds.yml), which has open internet access.
 
-Usage: python3 tools/fetch_sound_candidates.py out_dir [per_query]
+Usage: python3 tools/fetch_sound_candidates.py out_dir [per_query] [category,category,...]
 """
 import html
 import json
@@ -20,12 +20,12 @@ import urllib.request
 CATEGORIES = {
     "whip": ["whip crack", "whip"],
     "airhorn": ["air horn", "mlg airhorn"],
-    "vine_boom": ["vine boom", "boom bass impact meme"],
+    "vine_boom": ["vine boom", "vine boom sound effect", "boom meme", "dramatic boom"],
     "rimshot": ["rimshot", "ba dum tss"],
     "sad_trombone": ["sad trombone", "wah wah wah fail"],
-    "bow_chicka": ["bow chicka wow wow", "wah guitar funk porn"],
-    "sexy_sax": ["sexy saxophone", "smooth sax"],
-    "jazz": ["smooth jazz loop", "elevator music"],
+    "bow_chicka": ["bow chicka wow wow", "wah wah guitar", "funk wah guitar loop", "70s porn music", "porno funk"],
+    "sexy_sax": ["saxophone", "sax solo", "saxophone riff", "sexy sax", "romantic saxophone"],
+    "jazz": ["smooth jazz", "lounge music loop", "jazz loop", "elevator music"],
     "dramatic": ["dun dun dun dramatic", "dramatic sting"],
     "crickets": ["crickets", "crickets awkward silence"],
     "bonk": ["bonk", "cartoon bonk"],
@@ -106,9 +106,12 @@ def sound_info(user, sid):
 def main():
     out = sys.argv[1]
     per_query = int(sys.argv[2]) if len(sys.argv) > 2 else 3
+    only = set(filter(None, sys.argv[3].split(","))) if len(sys.argv) > 3 else set()
     os.makedirs(out, exist_ok=True)
     manifest = {}
     for key, queries in CATEGORIES.items():
+        if only and key not in only:
+            continue
         print(f"[{key}]")
         seen, picked = set(), []
         for query in queries:
