@@ -1,0 +1,35 @@
+name: Fetch sound candidates
+
+# Downloads freely licensed candidate recordings from Freesound.org into the
+# `sound-candidates` branch, so they can be reviewed and the best ones copied
+# into sounds/.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/fetch_sound_candidates.py
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download candidates
+        run: python3 tools/fetch_sound_candidates.py candidates 3 2>&1 | tee candidates-log.txt
+
+      - name: Publish to sound-candidates branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mv candidates-log.txt candidates/log.txt
+          cd candidates
+          git init -q -b sound-candidates
+          git add -A
+          git -c user.name="github-actions" -c user.email="github-actions@users.noreply.github.com" \
+            commit -q -m "Sound candidates for ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" sound-candidates
