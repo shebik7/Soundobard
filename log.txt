@@ -1,0 +1,52 @@
+[vine_boom]
+  + 802074 'Drama Boom 02 by modusmogulus' by modusmogulus [publicdomain/zero/1.0] dl=563
+  + 785925 'Drama Boom by modusmogulus' by modusmogulus [publicdomain/zero/1.0] dl=480
+  + 856795 'Bass Impact - Deep Hit - Rumble - Cinematic Boom v3 alt compressor by _earthbound_' by _earthbound_ [publicdomain/zero/1.0] dl=66
+  + 255111 'Cinematic_Boom_Rhapsodize.wav by rhapsodize' by rhapsodize [publicdomain/zero/1.0] dl=None
+  + 559529 'Cinematic Boom by Rizzard' by Rizzard [publicdomain/zero/1.0] dl=None
+  + 816376 'DSGNStngr_basic trailer boom impact by harrisonlace' by harrisonlace [publicdomain/zero/1.0] dl=None
+  + 34202 'glass_house2.wav by themfish' by themfish [licenses/by/4.0] dl=None
+  + 160688 'Cinematic Bass Boom by CosmicEmbers' by CosmicEmbers [licenses/by/3.0] dl=None
+  + 248150 'Deepest Boom Yet by hykenfreak' by hykenfreak [licenses/by/4.0] dl=None
+[bow_chicka]
+  + 78422 'wah_funky_a1.wav by craqs' by craqs [publicdomain/zero/1.0] dl=None
+  + 51319 'wah guitar 1.wav by marvman' by marvman [publicdomain/zero/1.0] dl=None
+  + 100765 'wahwahwah.wav by teoemes' by teoemes [publicdomain/zero/1.0] dl=None
+  + 91201 'REGGAE WAH GUITAR RIFF NORM.wav by Slapbass' by Slapbass [licenses/by/3.0] dl=None
+  + 234836 'Wah_Wah_5.mp3 by ValentinSosnitskiy' by ValentinSosnitskiy [licenses/by/4.0] dl=752
+  + 16215 'Voice Wah-Wah.aif by oriolgos' by oriolgos [licenses/by/3.0] dl=621
+[sexy_sax]
+  + 100475 'saxophone weep by iluppai' by iluppai [publicdomain/zero/1.0] dl=None
+  + 233226 'Suspense_1.wav by kaiodeleis' by kaiodeleis [publicdomain/zero/1.0] dl=None
+  + 388055 'Tenor Saxophone Noodling by Hockinfinger' by Hockinfinger [publicdomain/zero/1.0] dl=None
+  + 192131 'Trailer hit 7.wav by heavenlyhits' by heavenlyhits [licenses/by/3.0] dl=None
+  + 257413 'Relaxing Saxophone by Deatlev' by Deatlev [licenses/by/3.0] dl=None
+  + 204182 'sax-phrase.wav by xserra' by xserra [licenses/by/4.0] dl=None
+  + 572271 'Sax solo loop MS.wav by szegvari' by szegvari [publicdomain/zero/1.0] dl=267
+  + 572270 'Sax solo loop.wav by szegvari' by szegvari [publicdomain/zero/1.0] dl=235
+  + 660699 'cb-sax-phrase.wav by cemorse100' by cemorse100 [publicdomain/zero/1.0] dl=234
+  + 620501 'Sax-Ten-Phrase1.wav by omegagroove' by omegagroove [licenses/by/3.0] dl=373
+  + 88590 'saxophone_1.wav by piedoom' by piedoom [publicdomain/zero/1.0] dl=656
+  + 682335 'Sax riff 2a.wav by HenKonen' by HenKonen [publicdomain/zero/1.0] dl=50
+  + 256217 'tenor_short.wav by mdholland' by mdholland [licenses/by/3.0] dl=560
+[jazz]
+  + 150879 'Jazzy Chords by NenadSimic' by NenadSimic [publicdomain/zero/1.0] dl=None
+  + 261488 'snare kevoy2.wav by Logicogonist' by Logicogonist [publicdomain/zero/1.0] dl=585
+  + 467374 'LD 1 - Jazz HipHop Routine.wav by SergeyIonov' by SergeyIonov [publicdomain/zero/1.0] dl=480
+  + 4048 'ambientloop83bpm.wav by RealRhodesSounds' by RealRhodesSounds [licenses/by/3.0] dl=None
+  + 406569 'Smooth Chill Hip-Hop Loop.wav by DeVern' by DeVern [licenses/by/3.0] dl=None
+  + 530290 'Bright Smooth Jazzy Piano - 70bpm - Fmaj by nnaudio' by nnaudio [licenses/by/4.0] dl=924
+  + 242082 'Magic Bells Music Loop by orangefreesounds' by orangefreesounds [licenses/by/3.0] dl=None
+  + 263479 'Dreamy Melodic Synth Loop by orangefreesounds' by orangefreesounds [licenses/by/3.0] dl=None
+  + 326479 'Modern Music Loop 130 bpm by orangefreesounds' by orangefreesounds [licenses/by/3.0] dl=None
+  + 69611 'Mix0786BPM.wav by deleted_user_984625' by deleted_user_984625 [publicdomain/zero/1.0] dl=None
+  + 235844 'Bossa Rover by deleted_user_2906614' by deleted_user_2906614 [publicdomain/zero/1.0] dl=None
+  + 385676 'Trip Acoustic Beat.wav by Scydan' by Scydan [publicdomain/zero/1.0] dl=None
+  + 16172 'accoustic_loop_3_155bpm.mp3 by harri' by harri [licenses/by/4.0] dl=None
+  + 323545 'In The Middle Of July Music Loop by rhodesmas' by rhodesmas [licenses/by/4.0] dl=None
+  + 482096 'Elevator_door.wav by DanielVega' by DanielVega [publicdomain/zero/1.0] dl=None
+  + 250738 'COLIN_Nina_2014_2015_mad elevator.wav by univ_lyon3' by univ_lyon3 [publicdomain/zero/1.0] dl=507
+  + 410813 'LIOTTARD_Alexandra_2017_2018_elevator.wav by univ_lyon3' by univ_lyon3 [publicdomain/zero/1.0] dl=261
+  + 743697 'Elevator music by MichaeLydian' by MichaeLydian [licenses/by/4.0] dl=None
+  + 59710 'SonoKids-Omni_8.wav by pcaeldries' by pcaeldries [licenses/by/4.0] dl=194
+  + 751109 'Yod - Hiphop Chop Vocal by kontraamusic' by kontraamusic [licenses/by/4.0] dl=130
