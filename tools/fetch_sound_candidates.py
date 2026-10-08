@@ -49,6 +49,7 @@ LICENSES = {
     "by": 'license:"Attribution"',
 }
 
+DEBUG_PAGE = os.path.join(sys.argv[1] if len(sys.argv) > 1 else ".", "sample_sound_page.html")
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
 
@@ -85,7 +86,15 @@ def search(query, license_filter):
 def sound_info(user, sid):
     page = get(f"https://freesound.org/people/{user}/sounds/{sid}/")
     meta = dict(re.findall(r'<meta\s+property="og:([a-z:_]+)"\s+content="([^"]*)"', page))
-    preview = meta.get("audio") or next(iter(re.findall(r'(https://cdn\.freesound\.org/previews/[^"\']+-hq\.mp3)', page)), None)
+    previews = re.findall(r'((?:https?:)?//[^"\'\s]*previews/[^"\'\s]+?-hq\.mp3)', page)
+    preview = html.unescape(meta.get("audio") or (previews[0] if previews else ""))
+    if preview.startswith("//"):
+        preview = "https:" + preview
+    elif preview.startswith("/"):
+        preview = "https://freesound.org" + preview
+    if not os.path.exists(DEBUG_PAGE):
+        with open(DEBUG_PAGE, "w") as f:
+            f.write(page)
     lic = re.search(r'creativecommons\.org/(publicdomain/zero|licenses/by(?:-nc)?)/([\d.]+)', page)
     downloads = re.search(r'([\d,]+)\s*downloads', page)
     duration = re.search(r'"duration"\s*:\s*"?([\d.]+)', page) or re.search(r'Duration</dt>\s*<dd[^>]*>\s*([^<]+)', page)
@@ -130,7 +139,7 @@ def main():
                         with open(os.path.join(out, info["file"]), "wb") as f:
                             f.write(get(info["preview"], binary=True))
                     except Exception as e:  # noqa: BLE001
-                        print(f"  {sid}: download failed: {e}")
+                        print(f"  {sid}: download failed: {e} ({info['preview']})")
                         continue
                     picked.append(info)
                     print(f"  + {sid} {info['title']!r} by {user} [{info['license']}] dl={info['downloads']}")
