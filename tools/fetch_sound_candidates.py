@@ -49,7 +49,6 @@ LICENSES = {
     "by": 'license:"Attribution"',
 }
 
-DEBUG_PAGE = os.path.join(sys.argv[1] if len(sys.argv) > 1 else ".", "sample_sound_page.html")
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
 
@@ -86,15 +85,9 @@ def search(query, license_filter):
 def sound_info(user, sid):
     page = get(f"https://freesound.org/people/{user}/sounds/{sid}/")
     meta = dict(re.findall(r'<meta\s+property="og:([a-z:_]+)"\s+content="([^"]*)"', page))
-    previews = re.findall(r'((?:https?:)?//[^"\'\s]*previews/[^"\'\s]+?-hq\.mp3)', page)
-    preview = html.unescape(meta.get("audio") or (previews[0] if previews else ""))
-    if preview.startswith("//"):
-        preview = "https:" + preview
-    elif preview.startswith("/"):
-        preview = "https://freesound.org" + preview
-    if not os.path.exists(DEBUG_PAGE):
-        with open(DEBUG_PAGE, "w") as f:
-            f.write(page)
+    # The page links a low-quality preview; the high-quality one sits next to it.
+    m = re.search(r"previews/(\d+)/(\d+)_(\d+)-[lh]q\.(?:mp3|ogg)", page)
+    preview = f"https://cdn.freesound.org/previews/{m.group(1)}/{m.group(2)}_{m.group(3)}-hq.mp3" if m else None
     lic = re.search(r'creativecommons\.org/(publicdomain/zero|licenses/by(?:-nc)?)/([\d.]+)', page)
     downloads = re.search(r'([\d,]+)\s*downloads', page)
     duration = re.search(r'"duration"\s*:\s*"?([\d.]+)', page) or re.search(r'Duration</dt>\s*<dd[^>]*>\s*([^<]+)', page)
