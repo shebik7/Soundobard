@@ -220,7 +220,7 @@ for title in expected:
     wait_for(lambda: started_count(uid) == 0, timeout=3)
 
 # Long sound: second tap stops it, and a new sound replaces the old one.
-long_a, long_b = "Sexy saxofon", "Jazzový podkres"
+long_a, long_b = "Sexy saxofon", "Bow chicka wow wow"
 if long_a in expected and long_b in expected:
     tap_text(long_a, 0.3)
     wait_for(lambda: started_count(uid) >= 1)
@@ -310,6 +310,14 @@ check("board follows the new order", titles_now[:4] == [expected[1], expected[2]
 launch()
 titles_restart = [n["text"] for n in board_titles(ui_nodes(), set(expected) | {renamed})]
 check("order/rename/hide survive restart", titles_restart == titles_now)
+
+# Reset order restores the bundled order (renamed/hidden stay as they are).
+tap_desc("Nastavení", 1.0)
+tap_text("Obnovit výchozí pořadí", 0.8)
+back()
+titles_reset = [n["text"] for n in board_titles(ui_nodes(), set(expected) | {renamed})]
+want = [renamed if t == expected[0] else t for t in expected if t != hidden_title]
+check("reset restores default order", titles_reset == want, f"got {titles_reset[:5]}")
 
 # Columns: 4 per row.
 tap_desc("Nastavení", 1.0)

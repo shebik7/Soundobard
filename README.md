@@ -20,9 +20,12 @@ Play Protect může upozornit na neznámého vývojáře – zvol „Přesto nai
 - **Zabalené v aplikaci:** MP3 soubory ve složce [`sounds/`](sounds/). Název tlačítka je
   název souboru (podtržítka → mezery, číselný prefix `01_` jen určuje pořadí).
   Po přidání souborů se automaticky sestaví nové APK.
-- Aktuálně je tam 21 ukázkových zvuků (bič, airhorn, vine boom, ba-dum-tss, sad trombone,
-  porno-jazz „bow chicka wow wow“, saxofon…). Jsou vlastní, vygenerované skriptem
-  [`tools/generate_demo_sounds.py`](tools/generate_demo_sounds.py).
+- Aktuálně je tam 21 skutečných nahrávek z [Freesound.org](https://freesound.org)
+  (bič, airhorn, vine boom, bruh, ba-dum-tss, sad trombone, wah-wah „bow chicka wow wow“,
+  saxofon, prd, smích publika…) s volnou licencí CC0 / CC BY – autoři v [`CREDITS.md`](CREDITS.md).
+- Nové zvuky z Freesoundu: workflow *Fetch sound candidates* (Actions → Run workflow) stáhne
+  kandidáty do větve `sound-candidates`, výběr se nastaví v
+  [`tools/build_sounds.py`](tools/build_sounds.py), který je ořízne a srovná hlasitost.
 - **Přidané v telefonu:** Nastavení → *Přidat zvuky z telefonu*, nebo v jiné aplikaci
   (WhatsApp, Soubory…) *Sdílet → Soundboard*.
 

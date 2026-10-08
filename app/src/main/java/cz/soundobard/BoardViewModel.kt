@@ -43,6 +43,13 @@ class BoardViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** Bundled sounds back in file-name order, sounds added on the phone after them. */
+    fun resetOrder() = update { s ->
+        s.copy(sounds = s.sounds.sortedWith(
+            compareBy<Sound> { it.assetName == null }.thenBy(String.CASE_INSENSITIVE_ORDER) { it.assetName ?: "" }
+        ))
+    }
+
     fun move(fromId: String, toId: String) {
         val list = state.sounds.toMutableList()
         val from = list.indexOfFirst { it.id == fromId }

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.DragHandle
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
@@ -171,6 +172,11 @@ fun SettingsScreen(viewModel: BoardViewModel, onBack: () -> Unit, onImport: (Lis
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(start = 4.dp, bottom = 4.dp),
                     )
+                    TextButton(onClick = viewModel::resetOrder) {
+                        Icon(Icons.Rounded.RestartAlt, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Obnovit výchozí pořadí")
+                    }
                 }
             }
 

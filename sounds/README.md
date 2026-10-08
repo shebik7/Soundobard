@@ -10,5 +10,6 @@ Sem patří MP3 soubory, které se mají zabalit přímo do aplikace.
 - Nové soubory se při aktualizaci aplikace přidají na konec seznamu; vlastní
   pořadí a přejmenování nastavená v telefonu zůstanou zachována.
 
-Současné ukázkové zvuky jsou vlastní, synteticky vytvořené (`tools/generate_demo_sounds.py`),
-takže je klidně smaž nebo nahraď svými.
+Současné zvuky jsou nahrávky z [Freesound.org](https://freesound.org) s volnou licencí
+(CC0 / CC BY), autoři jsou v [`CREDITS.md`](../CREDITS.md). Vyrábí je
+`tools/build_sounds.py` z kandidátů, které stáhne workflow *Fetch sound candidates*.
