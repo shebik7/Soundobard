@@ -105,7 +105,7 @@ def tap_desc(desc, wait=0.8):
 def board_titles(nodes, expected):
     """Titles of sound buttons on screen, in reading order."""
     hits = [n for n in nodes if n["text"] in expected and n["bounds"][1] > 150]
-    hits.sort(key=lambda n: (n["bounds"][1] // 20, n["bounds"][0]))
+    hits.sort(key=lambda n: (n["center"][1] // 60, n["bounds"][0]))
     seen, ordered = set(), []
     for n in hits:
         if n["text"] not in seen:
@@ -190,7 +190,7 @@ check("all bundled sounds shown as buttons", on_board == expected,
 cells = board_titles(nodes, set(expected))
 if cells:
     widths = {n["bounds"][2] - n["bounds"][0] for n in cells}
-    first_row = [n for n in cells if abs(n["bounds"][1] - cells[0]["bounds"][1]) < 20]
+    first_row = [n for n in cells if abs(n["center"][1] - cells[0]["center"][1]) < 30]
     check("default layout has 3 columns", len(first_row) == 3, f"first row: {len(first_row)} buttons")
     last_bottom = max(n["bounds"][3] for n in cells)
     screen_h = int(re.search(r"(\d+)x(\d+)", shell("wm size")).group(2))
@@ -231,47 +231,61 @@ check("settings screen opens", bool(find(nodes, text="Přidat zvuky z telefonu")
 shell("input swipe 540 1900 540 700 400")
 time.sleep(0.8)
 screenshot("04_settings_list")
-shell("input swipe 540 700 540 1900 400")
-time.sleep(0.8)
+for _ in range(4):
+    shell("input swipe 540 700 540 1900 300")
+time.sleep(1.0)
 
 # Rename the first sound.
 first = expected[0]
 tap_text(first, 1.0)
 screenshot("05_rename_dialog")
-for _ in range(40):
-    shell("input keyevent KEYCODE_DEL")
 shell("input text Prejmenovany%sbic")
 time.sleep(0.5)
+screenshot("05b_rename_typed")
 tap_text("Uložit", 1.0)
 renamed = "Prejmenovany bic"
 check("rename shows in settings", bool(find(ui_nodes(), text=renamed)))
 
 # Reorder: drag the first row's handle below the third row.
-nodes = ui_nodes()
-handles = sorted(find(nodes, desc="Přesunout"), key=lambda n: n["bounds"][1])
-before = [n["text"] for n in sorted((n for n in nodes if n["text"] in set(expected) | {renamed}), key=lambda n: n["bounds"][1])]
-if len(handles) >= 4:
-    (x, y), (_, y3) = handles[0]["center"], handles[2]["center"]
+def settings_rows(nodes):
+    """(title, handle) pairs of list rows that are fully visible, top to bottom."""
+    titles = [n for n in nodes if n["text"] in set(expected) | {renamed}]
+    rows = []
+    for h in sorted(find(nodes, desc="Přesunout"), key=lambda n: n["center"][1]):
+        if h["bounds"][1] < 300:
+            continue
+        t = min(titles, key=lambda n: abs(n["center"][1] - h["center"][1]), default=None)
+        if t and abs(t["center"][1] - h["center"][1]) < 80:
+            rows.append((t["text"], h))
+    return rows
+
+
+rows = settings_rows(ui_nodes())
+before = [t for t, _ in rows]
+log(f"settings rows before drag: {before}")
+if len(rows) >= 4:
+    (x, y), (_, y3) = rows[0][1]["center"], rows[2][1]["center"]
     shell(f"input swipe {x} {y} {x} {y3 + 40} 1800")
     time.sleep(1.2)
-    nodes = ui_nodes()
-    after = [n["text"] for n in sorted((n for n in nodes if n["text"] in set(expected) | {renamed}), key=lambda n: n["bounds"][1])]
+    after = [t for t, _ in settings_rows(ui_nodes())]
     check("drag & drop reorders the list", after[:3] == [before[1], before[2], before[0]], f"before {before[:3]} after {after[:3]}")
     screenshot("06_settings_reordered")
 else:
-    check("drag & drop reorders the list", False, f"only {len(handles)} drag handles visible")
+    check("drag & drop reorders the list", False, f"only {len(rows)} rows visible")
 
 # Hide the 4th sound (bundled sounds can be hidden, not deleted).
 nodes = ui_nodes()
-rows = sorted(find(nodes, desc="Skrýt"), key=lambda n: n["bounds"][1])
 hidden_title = None
-if len(rows) >= 4:
-    target_y = rows[3]["center"][1]
-    texts = [n for n in nodes if n["text"] in set(expected) | {renamed}]
-    hidden_title = min(texts, key=lambda n: abs(n["center"][1] - target_y))["text"]
-    tap(rows[3])
-    time.sleep(0.8)
-    screenshot("06b_settings_hidden")
+target = find(nodes, text=expected[3])
+eyes = find(nodes, desc="Skrýt")
+if target and eyes:
+    eye = min(eyes, key=lambda n: abs(n["center"][1] - target[0]["center"][1]))
+    if abs(eye["center"][1] - target[0]["center"][1]) < 80:
+        tap(eye)
+        time.sleep(0.8)
+        hidden_title = expected[3]
+        screenshot("06b_settings_hidden")
+        check("hidden row shows 'Zobrazit' toggle", bool(find(ui_nodes(), desc="Zobrazit")))
 check("hide button available", hidden_title is not None)
 
 back()
@@ -280,8 +294,8 @@ titles_now = [n["text"] for n in board_titles(nodes, set(expected) | {renamed})]
 screenshot("07_board_after_settings")
 check("renamed title shown on board", renamed in titles_now)
 check("hidden sound not on board", hidden_title is not None and hidden_title not in titles_now)
-check("board follows the new order", titles_now[:3] == [expected[1], expected[2], renamed], f"first three: {titles_now[:3]}")
-check("hidden sound is the 4th one", hidden_title == expected[3], f"hidden: {hidden_title}")
+check("board follows the new order", titles_now[:4] == [expected[1], expected[2], renamed, expected[4]],
+      f"first four: {titles_now[:4]}")
 
 # Settings persist across an app restart.
 launch()
@@ -293,7 +307,7 @@ tap_desc("Nastavení", 1.0)
 tap_text("4", 0.6)
 back()
 cells = board_titles(ui_nodes(), set(expected) | {renamed})
-first_row = [n for n in cells if abs(n["bounds"][1] - cells[0]["bounds"][1]) < 20]
+first_row = [n for n in cells if abs(n["center"][1] - cells[0]["center"][1]) < 30]
 check("4-column layout", len(first_row) == 4, f"first row: {len(first_row)}")
 screenshot("08_board_4_columns")
 tap_desc("Nastavení", 1.0)
@@ -339,8 +353,10 @@ if m:
         tap(shared[0])
         ok = wait_for(lambda: started_count(uid) >= 1)
         check("imported sound plays", bool(ok), f"states: {player_states(uid)}")
-        if find(ui_nodes(), desc="Zastavit vše"):
+        try:
             tap_desc("Zastavit vše", 0.5)
+        except RuntimeError:
+            pass  # short sound already finished
 else:
     check("sound shared from another app is added", False, "media scanner did not index the test file")
 

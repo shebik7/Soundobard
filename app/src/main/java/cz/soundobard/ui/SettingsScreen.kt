@@ -47,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,8 +55,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cz.soundobard.BoardViewModel
@@ -304,20 +309,25 @@ private fun SoundRow(
 
 @Composable
 private fun RenameDialog(sound: Sound, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
-    var text by remember(sound.id) { mutableStateOf(sound.title) }
+    // Field is focused with the old title selected, so typing replaces it right away.
+    var value by remember(sound.id) {
+        mutableStateOf(TextFieldValue(sound.title, TextRange(0, sound.title.length)))
+    }
+    val focus = remember { FocusRequester() }
+    LaunchedEffect(Unit) { focus.requestFocus() }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Přejmenovat") },
         text = {
             OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = value,
+                onValueChange = { value = it },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().focusRequester(focus),
             )
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(text) }, enabled = text.isNotBlank()) { Text("Uložit") }
+            TextButton(onClick = { onConfirm(value.text) }, enabled = value.text.isNotBlank()) { Text("Uložit") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Zrušit") } },
     )

@@ -67,6 +67,22 @@ jobs:
           name: e2e-results
           path: e2e-results
 
+      # Screenshots and report also go to the `e2e-results` branch so they can be
+      # browsed on GitHub (and fetched with plain git) without downloading a zip.
+      - name: Publish results to e2e-results branch
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -d e2e-results ] || exit 0
+          cd e2e-results
+          [ -f logcat.txt ] && tail -n 3000 logcat.txt > logcat.tmp && mv logcat.tmp logcat.txt
+          git init -q -b e2e-results
+          git add -A
+          git -c user.name="github-actions" -c user.email="github-actions@users.noreply.github.com" \
+            commit -q -m "E2E results for ${GITHUB_SHA::7} (run ${GITHUB_RUN_NUMBER})"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" e2e-results
+
   # Builds from the default branch that pass the test are published as a GitHub
   # release so the APK can be downloaded straight from the phone's browser.
   release:
