@@ -86,8 +86,8 @@ def sound_info(user, sid):
     page = get(f"https://freesound.org/people/{user}/sounds/{sid}/")
     meta = dict(re.findall(r'<meta\s+property="og:([a-z:_]+)"\s+content="([^"]*)"', page))
     # The page links a low-quality preview; the high-quality one sits next to it.
-    m = re.search(r"previews/(\d+)/(\d+)_(\d+)-[lh]q\.(?:mp3|ogg)", page)
-    preview = f"https://cdn.freesound.org/previews/{m.group(1)}/{m.group(2)}_{m.group(3)}-hq.mp3" if m else None
+    m = re.search(rf"previews/(\d+)/{sid}_(\d+)-[lh]q\.(?:mp3|ogg)", page)
+    preview = f"https://cdn.freesound.org/previews/{m.group(1)}/{sid}_{m.group(2)}-hq.mp3" if m else None
     lic = re.search(r'creativecommons\.org/(publicdomain/zero|licenses/by(?:-nc)?)/([\d.]+)', page)
     downloads = re.search(r'([\d,]+)\s*downloads', page)
     duration = re.search(r'"duration"\s*:\s*"?([\d.]+)', page) or re.search(r'Duration</dt>\s*<dd[^>]*>\s*([^<]+)', page)
