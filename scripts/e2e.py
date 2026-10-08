@@ -55,7 +55,7 @@ def screenshot(name):
         f.write(subprocess.run(["adb", "exec-out", "screencap", "-p"], capture_output=True).stdout)
 
 
-def ui_nodes():
+def ui_nodes(_dismissed=0):
     for _ in range(5):
         r = subprocess.run(["adb", "shell", "uiautomator dump /sdcard/ui.xml"], capture_output=True, text=True)
         if "dumped to" in r.stdout:
@@ -72,6 +72,15 @@ def ui_nodes():
                     "bounds": (x1, y1, x2, y2),
                     "center": ((x1 + x2) // 2, (y1 + y2) // 2),
                 })
+            # The emulator's own launcher sometimes ANRs after boot; its system
+            # dialog would cover the app, so wait it out and look again.
+            if _dismissed < 3 and any("isn't responding" in n["text"] for n in nodes):
+                wait_btn = find(nodes, text="Wait") or find(nodes, text="Close app")
+                if wait_btn:
+                    log("dismissing system 'isn't responding' dialog")
+                    tap(wait_btn[0])
+                    time.sleep(1.0)
+                    return ui_nodes(_dismissed + 1)
             return nodes
         time.sleep(0.7)
     raise RuntimeError("uiautomator dump failed")
@@ -181,8 +190,8 @@ adb("logcat", "-c")
 uid = app_uid()
 
 launch(clear=True)
-screenshot("01_board")
 nodes = ui_nodes()
+screenshot("01_board")
 on_board = [n["text"] for n in board_titles(nodes, set(expected))]
 check("all bundled sounds shown as buttons", on_board == expected,
       f"{len(on_board)}/{len(expected)} in expected order" if on_board == expected else f"got {on_board}")
