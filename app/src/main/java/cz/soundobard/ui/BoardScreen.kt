@@ -3,7 +3,7 @@ package cz.soundobard.ui
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,12 +30,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cz.soundobard.BoardViewModel
@@ -114,17 +119,43 @@ private fun SoundButton(sound: Sound, columns: Int, isPlaying: Boolean, onClick:
         color = container,
         contentColor = content,
     ) {
-        Box(Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 6.dp), contentAlignment = Alignment.Center) {
+        BoxWithConstraints(
+            Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 6.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            val size = fittingFontSize(sound.title, fontSize, constraints.maxWidth)
             Text(
                 text = sound.title,
-                fontSize = fontSize,
-                lineHeight = fontSize * 1.15f,
+                fontSize = size,
+                lineHeight = size * 1.15f,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
         }
+    }
+}
+
+/**
+ * Largest font size (down to 11sp) at which no word has to be split across lines
+ * and the title fits into three lines.
+ */
+@Composable
+private fun fittingFontSize(title: String, base: TextUnit, maxWidth: Int): TextUnit {
+    val measurer = rememberTextMeasurer()
+    val style = LocalTextStyle.current.copy(fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
+    return remember(title, base, maxWidth, style) {
+        val words = title.split(' ').filter { it.isNotEmpty() }
+        var size = base.value
+        while (size > 11f) {
+            val st = style.copy(fontSize = size.sp, lineHeight = (size * 1.15f).sp)
+            val longestWord = words.maxOfOrNull { measurer.measure(it, st, softWrap = false, maxLines = 1).size.width } ?: 0
+            val lines = measurer.measure(title, st, constraints = Constraints(maxWidth = maxWidth)).lineCount
+            if (longestWord <= maxWidth && lines <= 3) break
+            size -= 1f
+        }
+        size.sp
     }
 }
 
